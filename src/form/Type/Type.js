@@ -34,6 +34,12 @@ export default class Type extends Component{
             <TypeOption type="note" 
                         selected={this.props.type==="note" ? true : false} 
                         changeType={this.props.changeType}/>
+            <TypeOption type="securityConfetti" 
+                        selected={this.props.type==="securityConfetti" ? true : false} 
+                        changeType={this.props.changeType}/>
+            <TypeOption type="securitySquiggle" 
+                        selected={this.props.type==="securitySquiggle" ? true : false} 
+                        changeType={this.props.changeType}/>
         </div>
 	   )
   }

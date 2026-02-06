@@ -14,14 +14,14 @@ class App extends Component {
             data = "err"
         }
         this.state = {  initialData: data,
-                        data: {type: "fourDots", distance: 5, unit: "mm", colour: "#d4d4d4", colourValue: 0, staffNr: 1},
+                        data: {type: "fourDots", distance: 5, unit: "mm", colour: "#d4d4d4", colourValue: 0, staffNr: 1, squiggleRainbow: false, squiggleThickness: 0.3},
                         print: false,
                         width: "100%",
                         height: "100%"}
     }
     
     componentDidMount(){
-        const newData = (this.state.initialData==="err") ? {type: "fourDots", distance: 5, unit: "mm", colour: "#d4d4d4", staffNr: 1,} : this.state.initialData
+        const newData = (this.state.initialData==="err") ? {type: "fourDots", distance: 5, unit: "mm", colour: "#d4d4d4", staffNr: 1, squiggleRainbow: false, squiggleThickness: 0.3} : this.state.initialData
         this.setState({data:newData})
     }
     
@@ -78,6 +78,19 @@ class App extends Component {
        
     }
     
+    
+    changeSquiggleRainbow(rainbow){
+       var newData = this.state.data
+       newData.squiggleRainbow = rainbow
+       this.saveData(newData)    
+    }
+    
+    changeSquiggleThickness(thickness){
+       var newData = this.state.data
+       newData.squiggleThickness = thickness
+       this.saveData(newData)    
+    }
+    
     print(){
         this.setState({print: true})
     }
@@ -101,6 +114,8 @@ class App extends Component {
                         colour={this.state.data.colour}
                         type={this.state.data.type}
                         staffNr={this.state.data.staffNr}
+                        squiggleRainbow={this.state.data.squiggleRainbow}
+                        squiggleThickness={this.state.data.squiggleThickness}
                         print={this.state.print}/>
         : ""
     
@@ -123,6 +138,10 @@ class App extends Component {
                     unit={this.state.data.unit} 
                     colour={this.state.data.colour}
                     type={this.state.data.type}
+                    squiggleRainbow={this.state.data.squiggleRainbow}
+                    squiggleThickness={this.state.data.squiggleThickness}
+                    changeSquiggleRainbow={this.changeSquiggleRainbow.bind(this)}
+                    changeSquiggleThickness={this.changeSquiggleThickness.bind(this)}
                     print={this.print.bind(this)}/>
             <Ruler 	unit={this.state.data.unit}
                     changeUnit={this.changeUnit.bind(this)}
@@ -132,6 +151,8 @@ class App extends Component {
                     colour={this.state.data.colour}
                     staffNr={this.state.data.staffNr}
                     type={this.state.data.type}
+                    squiggleRainbow={this.state.data.squiggleRainbow}
+                    squiggleThickness={this.state.data.squiggleThickness}
                     height={this.state.height}/>
              <Signature/>
           </div>

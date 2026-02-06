@@ -7,7 +7,9 @@ const types = { fourDots : require('./four-dots.svg'),
                 rectangle : require('./rectangle.svg'),
                 hexagon : require('./hexagon.svg'),
                 note : require('./note.svg'),
-                lines : require('./lines.svg')}
+                lines : require('./lines.svg'),
+                securityConfetti: require('./confetti.svg'),
+                securitySquiggle: require('./squiggle.svg')}
 
 export default class TypeOption extends Component{
 		constructor(props){

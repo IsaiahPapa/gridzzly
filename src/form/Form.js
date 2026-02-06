@@ -39,6 +39,10 @@ export default class Form extends Component{
 						colour={this.props.colour}
 						changeColour={this.props.changeColour}
 						value={this.props.colourValue}
+                        squiggleRainbow={this.props.squiggleRainbow}
+                        squiggleThickness={this.props.squiggleThickness}
+                        changeSquiggleRainbow={this.props.changeSquiggleRainbow}
+                        changeSquiggleThickness={this.props.changeSquiggleThickness}
 						print={this.props.print}/>
         </div>
 	   )

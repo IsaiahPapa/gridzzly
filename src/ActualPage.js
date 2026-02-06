@@ -35,6 +35,10 @@ export default class ActualPage extends Component{
 		this.drawRectangle(nextProps.distance, nextProps.unit, nextProps.colour)
 	}else if(nextProps.type==="hexagon"){
 		this.drawHexagon(nextProps.distance, nextProps.unit, nextProps.colour)
+	}else if(nextProps.type==="securityConfetti"){
+		this.drawSecurityConfetti(nextProps.distance, nextProps.unit, nextProps.colour)
+	}else if(nextProps.type==="securitySquiggle"){
+		this.drawSecuritySquiggle(nextProps.distance, nextProps.unit, nextProps.colour, nextProps.squiggleRainbow, nextProps.squiggleThickness)
 	}else{
 		this.drawNotes(nextProps.distance, nextProps.unit, nextProps.colour, nextProps.staffNr)
 	}   
@@ -141,7 +145,110 @@ export default class ActualPage extends Component{
 					width: width,
 					height: height})
   }
-                      
+
+  drawSecurityConfetti(distance, unit, colour) {
+        var grid = []
+        const width = unit==="mm" ? 190 : 195.9
+        const height = unit==="mm" ? 276 : 259.4
+        const distanceMM = unit==="mm" ? distance : distance/0.03937
+        
+        // Calculate shapes to cover the full page
+        const tileSize = distanceMM * 4
+        const tilesX = Math.ceil(width / tileSize)
+        const tilesY = Math.ceil(height / tileSize)
+        const shapesPerTile = 12
+        
+        let seed = 12345
+        const rand = () => {
+            seed = (1664525 * seed + 1013904223) % 4294967296
+            return seed / 4294967296
+        }
+        
+        let key = 0
+        for (let ty = 0; ty < tilesY; ty++) {
+            for (let tx = 0; tx < tilesX; tx++) {
+                const offsetX = tx * tileSize
+                const offsetY = ty * tileSize
+                
+                // Reset seed for each tile to create repeating pattern
+                seed = 12345
+                
+                for (let i = 0; i < shapesPerTile; i++) {
+                    const margin = 1
+                    const localX = margin + rand() * (tileSize - margin * 2)
+                    const localY = margin + rand() * (tileSize - margin * 2)
+                    const x = offsetX + localX
+                    const y = offsetY + localY
+                    const r = (rand() * 1.5 + 0.8)
+                    const type = Math.floor(rand() * 3)
+                    
+                    if (type === 0) {
+                        grid.push(<circle key={key} cx={x + "mm"} cy={y + "mm"} r={r + "mm"} fill={colour}/>)
+                    } else if (type === 1) {
+                        grid.push(<rect key={key} x={x + "mm"} y={y + "mm"} width={r*2 + "mm"} height={r*2 + "mm"} fill={colour}/>)
+                    } else {
+                        grid.push(<polygon key={key} points={`${x}mm,${y}mm ${x+r}mm,${y+r*2}mm ${x-r}mm,${y+r*2}mm`} fill={colour}/>)
+                    }
+                    key++
+                }
+            }
+        }
+
+        this.setState({ grid: grid,
+                        width: width,
+                        height: height})
+    }
+
+  drawSecuritySquiggle(distance, unit, colour, rainbow, thickness) {
+    var grid = []
+    // Use same dimensions as other patterns
+    const width = unit==="mm" ? 190 : 195.9
+    const height = unit==="mm" ? 276 : 259
+    const distanceMM = unit==="mm" ? distance : distance/0.03937
+    const strokeWidth = (thickness || 0.3) + "mm"
+    
+    // Rows logic - add extra row to ensure full coverage
+    const rowHeight = distanceMM
+    const rows = Math.ceil(height / rowHeight) + 1
+    const rainbowColors = ["#FF6B6B", "#FECA57", "#48DBFB", "#FF9FF3", "#54A0FF", "#5F27CD"]
+    
+    for (let i = 0; i < rows; i++) {
+        // Create sine wave using line segments with mm units
+        const cy = i * distanceMM + distanceMM/2 // Center Y of the row
+        const step = distanceMM/8 // small step for smooth curve
+        const amplitude = distanceMM/4
+        
+        // Use hex colors for rainbow
+        const lineColour = rainbow ? rainbowColors[i % rainbowColors.length] : colour
+        
+        // Build array of line segments
+        let prevX = 0
+        let prevY = cy + Math.sin(0) * amplitude
+        
+        for (let x = step; x <= width + 5; x += step) {
+            const angle = (x / (distanceMM * 2)) * Math.PI * 2
+            const y = cy + Math.sin(angle) * amplitude
+            
+            grid.push(
+                <line 
+                    key={i + "_" + x} 
+                    x1={prevX + "mm"} 
+                    y1={prevY + "mm"} 
+                    x2={x + "mm"} 
+                    y2={y + "mm"} 
+                    stroke={lineColour} 
+                    strokeWidth={strokeWidth}
+                />
+            )
+            prevX = x
+            prevY = y
+        }
+    }
+    
+    this.setState({ grid: grid,
+                    width: width,
+                    height: height})
+  }
   drawRectangle(distance, unit, colour){
         var grid =[]
 		const width = unit==="mm" ? 190 : 195.9

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Distance from './Distance'
 import Colour from './Colour'
 import Staff from './Staff'
+import SquiggleOptions from './SquiggleOptions'
 import {silver, radius } from '../../Styles'
 
 export default class Wrapper extends Component{
@@ -23,6 +24,16 @@ export default class Wrapper extends Component{
           <Staff changeStaffNr={this.props.changeStaffNr}
                  staffNr={this.props.staffNr} />
           : ""
+          
+    const squiggleOptions = this.props.type==="securitySquiggle" ?
+          <SquiggleOptions 
+                squiggleRainbow={this.props.squiggleRainbow}
+                squiggleThickness={this.props.squiggleThickness}
+                changeSquiggleRainbow={this.props.changeSquiggleRainbow}
+                changeSquiggleThickness={this.props.changeSquiggleThickness}
+          />
+          : ""
+          
     return (
 		<div style={sx}>
             <Distance   type={this.props.type}
@@ -33,8 +44,8 @@ export default class Wrapper extends Component{
             {numberOfStaffs}
             <Colour     colour={this.props.colour}
                         changeColour={this.props.changeColour}
-						value={this.props.value}/>
-            
+					    value={this.props.value}/>
+            {squiggleOptions}
 		</div>
 	)
   }
